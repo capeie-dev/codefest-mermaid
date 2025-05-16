@@ -1,0 +1,53 @@
+Amazon Lambda is a serverless compute service offered by AWS that lets you run code without provisioning or managing servers. You simply upload your code, and Lambda automatically handles everything required to run and scale it with high availability. [1, 2, 3, 4]  
+Key features of AWS Lambda: [1, 5, 6, 7]  
+
+• Serverless Execution: Lambda runs your code in response to events and automatically manages the compute resources. [1, 5]  
+• Event-Driven Architecture: Lambda functions can be triggered by various AWS services (e.g., S3, API Gateway, DynamoDB) or external HTTP requests. [1, 6, 8, 9]  
+• Auto Scaling: AWS Lambda automatically scales your application by running code in response to each trigger, individually handling each request. [1, 5]  
+• Flexible Language Support: Supports multiple programming languages such as Java, Python, Node.js, Go, Ruby, and .NET Core. [1, 6, 10]  
+• Cost Efficiency: You pay only for the compute time you consume — there is no charge when your code is not running. [1, 4, 11]  
+• Built-in Fault Tolerance: Lambda maintains compute capacity and infrastructure reliability. [1, 12]  
+• Integration with AWS Ecosystem: Works seamlessly with services like Amazon CloudWatch, Step Functions, and X-Ray for observability. [5, 6, 13, 14]  
+
+Use cases of AWS Lambda: [5, 15, 16, 17]  
+
+• Real-time File Processing: Automatically process new files uploaded to S3, such as resizing images, indexing documents, or transforming data. [6, 8, 18]  
+• Serverless APIs: Combine Lambda with API Gateway to create fully serverless REST or GraphQL APIs. [5, 9, 19]  
+• Automation and Scheduled Tasks: Run scheduled cleanup, ETL, or maintenance jobs with Amazon EventBridge or CloudWatch. [6, 15, 20]  
+• Real-time Stream Processing: Process real-time data streams from Kinesis or DynamoDB Streams for analytics or alerting. [21, 22]  
+• Backend for Mobile & Web Apps: Handle authentication, state, and CRUD operations as backend logic for applications. [5, 23]  
+• Chatbots and Voice Assistants: Power intelligent assistants using Lambda with services like Lex or Alexa Skills Kit. [24, 25]  
+
+How it Works: [1, 26, 27]  
+
+• You define a function with supported runtime and permissions.  
+• Lambda runs your function in a lightweight, isolated container in response to an event trigger.  
+• AWS handles provisioning, scaling, monitoring, and fault tolerance.  
+• Output or error is returned to the invoking service.  
+
+Underlying Methods (AWS SDK & Runtime Operations):  
+
+• createFunction: Deploys a new Lambda function, specifying runtime, handler, role, and source code.  
+• invoke: Executes a Lambda function manually or via another AWS service; can be synchronous or asynchronous.  
+• deleteFunction: Permanently removes a Lambda function.  
+• updateFunctionCode: Updates the source code of an existing function without changing configuration.  
+• updateFunctionConfiguration: Modifies settings like memory, timeout, environment variables, or handler.  
+• listFunctions: Returns a list of deployed Lambda functions in the account.  
+• getFunction: Retrieves metadata, configuration, and code location for a specific function.  
+• addPermission: Grants an AWS service or principal permission to invoke the Lambda function.  
+• removePermission: Revokes previously granted invocation permissions.  
+• createAlias / updateAlias: Points a function alias (e.g., `prod`, `v1`) to a specific version of the function.  
+• publishVersion: Creates an immutable snapshot of the function code + config for release management.  
+• listEventSourceMappings: Lists integrations with event sources like DynamoDB Streams, Kinesis, or SQS.  
+• createEventSourceMapping: Connects a function to an event source for automatic triggering.  
+• deleteEventSourceMapping: Disconnects a function from an event source.  
+• putFunctionConcurrency: Configures reserved concurrency to throttle or isolate workloads.  
+• tagResource / untagResource: Adds or removes metadata tags for cost and resource tracking.
+
+Example Runtime Handlers (by language):  
+
+• **Node.js**:  
+```js
+exports.handler = async (event) => {
+  return { statusCode: 200, body: "Hello from Lambda!" };
+};

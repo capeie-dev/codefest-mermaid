@@ -1,0 +1,43 @@
+PostgreSQL is a powerful, open-source object-relational database system known for its reliability, feature richness, and extensibility. It is widely used in both startups and enterprises to support transactional applications, analytical workloads, and cloud-native platforms. Amazon RDS for PostgreSQL offers a managed, scalable PostgreSQL deployment on AWS with automated administration features. [1, 2, 3]
+
+Key Features: [1, 2, 4]
+
+• Managed Deployments: Amazon RDS automates provisioning, software patching, upgrades, and instance scaling.  
+• High Availability: Supports Multi-AZ deployments with automatic failover and read replicas for scalability.  
+• Backup & Recovery: Provides automated snapshots, PITR (point-in-time recovery), and cross-region backups.  
+• Performance Optimization: Offers support for query tuning, indexing, and extensions like `pg_stat_statements`.  
+• Storage Flexibility: Uses SSD-backed storage with auto-scaling, provisioned IOPS, and encryption.  
+• Trusted Language Extensions (TLE): Allows custom extensions in trusted languages without AWS certification.  
+• Version Support: Supports PostgreSQL versions 11 through 17 as of 2025.  
+• Compatibility: Works with existing PostgreSQL drivers, tools, and ORM frameworks like Hibernate and JPA.
+
+Common Use Cases: [2, 3, 4]
+
+• Transactional Systems: E-commerce, booking systems, banking and finance applications.  
+• Analytical Queries: Reporting engines, dashboards, and hybrid OLTP/OLAP systems.  
+• Microservices Backends: RESTful APIs, Spring Boot services, containerized workloads with persistent data.  
+• Migration Targets: Replacing legacy databases (Oracle, SQL Server) with a fully open-source alternative.  
+• Event Sourcing & CQRS: Postgres is used as the write model or event store in modern DDD architectures.  
+
+How It Works: [1, 3]
+
+• PostgreSQL engine is hosted and managed within Amazon RDS with no need to manually install or configure.  
+• You connect via standard PostgreSQL connection URLs or JDBC URIs using a client or ORM.  
+• RDS automates backups, patching, and monitoring.  
+• Database instances scale vertically (more vCPUs/RAM) or horizontally (read replicas).  
+• Use parameter groups to tune behavior, and IAM or security groups to manage access.  
+
+Underlying Methods (Java – JDBC / Spring Data JPA):
+
+• `JdbcTemplate.query(String sql, RowMapper<T>)`: Executes SQL queries and maps rows to POJOs.  
+• `JdbcTemplate.update(String sql, Object... args)`: Performs update/insert/delete operations.  
+• `DataSourceBuilder.create().url(...).username(...).build()`: Programmatically configures the DB connection.  
+• `EntityManager.find(Class<T>, id)`: Finds a record by primary key using JPA.  
+• `@Query("SELECT u FROM User u WHERE u.email = :email")`: Custom HQL query via Spring Data JPA.  
+• `JpaRepository<T, ID>`: Interface for standard CRUD operations in Spring Data.  
+• `@Transactional`: Declares a method or class to run inside a transaction.  
+• `@Entity`: Marks a POJO as a mapped JPA entity.  
+• `@Table(name = "my_table")`: Maps the entity to a specific DB table.  
+• `@Column(name = "first_name")`: Maps fields to database columns.  
+• `@Id` / `@GeneratedValue`: Declares the primary key and its auto-generation strategy.  
+• `@Modifying`: Used with `@Query` to declare custom `INSERT`, `UPDATE`, or `DELETE` SQL.

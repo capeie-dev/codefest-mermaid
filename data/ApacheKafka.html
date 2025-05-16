@@ -1,0 +1,43 @@
+Apache Kafka is a distributed event streaming platform used for building real-time data pipelines and streaming applications. It is designed to handle high-throughput, fault-tolerant, and scalable messaging between producers and consumers. Kafka persists events on disk and enables processing of both real-time and historical data. [1, 2, 3]
+
+Key Features: [2, 3, 4, 5]
+
+• Publish-Subscribe Model: Kafka supports high-throughput, durable publish-subscribe messaging between systems. [1, 3]  
+• Durability and Fault Tolerance: Messages are persisted to disk and replicated across multiple nodes. [2, 4]  
+• Scalability: Kafka is designed for horizontal scaling with topic partitioning and consumer group load balancing. [1, 3, 5]  
+• Real-Time and Batch Processing: Kafka supports both stream processing and log aggregation use cases. [1, 6]  
+• High Performance: Capable of handling millions of events per second with low latency. [3, 4]  
+• Ecosystem Support: Integrates with Kafka Streams, Kafka Connect, and tools like Spark, Flink, and Debezium. [6, 7, 8]  
+
+Use Cases: [1, 3, 6]
+
+• Microservice Communication: Kafka decouples services through event-driven patterns. [3, 4]  
+• Real-Time Analytics: Used to process data streams in real-time for dashboards, fraud detection, etc. [2, 6]  
+• Log Aggregation: Collect and aggregate logs from different systems into a central topic for monitoring. [1, 7]  
+• Data Integration: Kafka Connect is used for integrating Kafka with databases, storage systems, and external services. [8]  
+• Event Sourcing: Kafka can be used as a source of truth for system state using event logs. [6]  
+
+How it Works: [1, 3, 6]
+
+• Producers write messages to topics.  
+• Brokers store and replicate topic partitions across the cluster.  
+• Consumers subscribe to topics and process records.  
+• Offset tracking allows replays and ensures message ordering per partition. 
+
+Underlying Methods (Java – Apache Kafka Client API):
+
+• `KafkaProducer.send(ProducerRecord)`: Sends a message to a Kafka topic asynchronously.  
+• `KafkaProducer.flush()`: Ensures all buffered messages are sent to the Kafka broker.  
+• `KafkaProducer.close()`: Closes the producer and releases resources.  
+• `ProducerRecord<K, V>`: Encapsulates the message to send, including topic, key, value, and optional partition.  
+• `KafkaConsumer.subscribe(List<String>)`: Subscribes to one or more topics to receive messages.  
+• `KafkaConsumer.poll(Duration)`: Retrieves records from the broker, blocking up to a specified timeout.  
+• `KafkaConsumer.commitSync()`: Commits the offset of messages that have been successfully processed.  
+• `KafkaConsumer.seek(TopicPartition, offset)`: Manually sets the position in the log to read from.  
+• `KafkaConsumer.assign(List<TopicPartition>)`: Manually assigns partitions instead of subscribing.  
+• `KafkaConsumer.close()`: Closes the consumer instance and cleans up resources.  
+• `AdminClient.createTopics() / deleteTopics()`: Programmatically manage Kafka topics.  
+• `AdminClient.listTopics() / describeTopics()`: List or describe existing Kafka topics.  
+• `KafkaStreams.start() / close()`: Starts or stops a Kafka Streams processing topology.  
+• `StreamsBuilder.stream("topic")`: Consumes from a topic in Kafka Streams API.  
+• `KStream.mapValues()` / `filter()` / `join()` / `to()`: Used to transform, filter, join, or write Kafka Streams data.

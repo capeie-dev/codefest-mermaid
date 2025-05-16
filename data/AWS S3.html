@@ -1,0 +1,79 @@
+Amazon Simple Storage Service (S3) is a cloud object storage service offered by Amazon Web Services (AWS). It allows users to store and retrieve any amount of data. S3 provides scalable, durable, and secure storage for various use cases, including storing data for Internet applications, backups, disaster recovery, and data lakes. [1, 2, 3, 4, 5]  
+Key features of Amazon S3: [6, 7]  
+
+• Object Storage: Data is stored as objects within S3 buckets. [2, 8]  
+• Scalability and Durability: S3 can handle virtually any amount of data and is designed for high durability. [3, 5]  
+• Storage Classes: Offers different storage classes (e.g., S3 Standard, S3 Intelligent-Tiering, S3 Glacier) to optimize storage costs and performance for various use cases. [6, 9, 10]  
+• Access Control: Provides robust access management options, including IAM (AWS Identity and Access Management), bucket policies, and S3 Access Grants, to control who can access and modify S3 resources. [11]  
+• Security Features: Offers encryption (both server-side and client-side), VPC endpoints, and security groups to protect data. [12]  
+• Integration with other AWS services: S3 integrates seamlessly with other AWS services, such as Amazon EC2, AWS Lambda, and Amazon SQS, to create robust and scalable solutions. [5, 13, 14, 15, 16]  
+
+Use cases of Amazon S3: [17, 18]  
+
+• Storing data for Internet applications: Web applications, mobile applications, and APIs can use S3 to store static content, user data, and application logs. [1, 13, 19, 20, 21, 22, 23]  
+• Backups and disaster recovery: S3 can be used as a central repository for backups and disaster recovery, providing a secure and reliable way to store data. [1, 20]  
+• Data lakes: S3 is an excellent choice for storing large amounts of raw and structured data for analytics and data warehousing. [5, 20]  
+• Content distribution: S3 can be used to host static content and deliver it to users globally through services like AWS CloudFront. [1, 6, 24, 25, 26]  
+• Archival storage: S3 Glacier and S3 Glacier Deep Archive are optimized for archival storage and long-term data retention. [9, 10]  
+
+Underlying Methods (AWS SDK & Runtime Operations):
+
+• `createBucket(String bucketName)`: Creates a new bucket in the specified region.  
+• `listBuckets()`: Lists all S3 buckets owned by the authenticated sender.  
+• `putObject(PutObjectRequest, RequestBody)`: Uploads an object (file) to a bucket with optional metadata.  
+• `getObject(GetObjectRequest, Path)`: Downloads an object from a bucket to a local file.  
+• `getObjectAsBytes()`: Retrieves the object content as a byte array.  
+• `headObject()`: Retrieves metadata (e.g., size, content type, last modified) without downloading the object.  
+• `copyObject()`: Copies an object from one bucket/key to another.  
+• `deleteObject()`: Deletes a single object from a bucket.  
+• `deleteObjects()`: Deletes multiple objects in a single request.  
+• `listObjectsV2()`: Lists objects within a bucket (can include prefix and pagination).  
+• `putBucketPolicy() / getBucketPolicy()`: Sets or retrieves access control policies at the bucket level.  
+• `putObjectAcl() / getObjectAcl()`: Applies or retrieves object-level ACL permissions.  
+• `putBucketVersioning()`: Enables versioning to keep multiple variants of an object.  
+• `putBucketLifecycleConfiguration()`: Configures automatic data tiering, expiration, and cleanup.  
+• `putObjectTagging() / getObjectTagging()`: Adds or retrieves key-value tags used for filtering or lifecycle rules.  
+• `putBucketEncryption() / getBucketEncryption()`: Enables or retrieves default encryption settings for a bucket.  
+• `restoreObject()`: Initiates a temporary restore of archived objects from Glacier or Deep Archive.  
+• `generatePresignedUrl()`: Creates a time-limited URL to upload or download an object without requiring credentials.
+
+Example Usage (Java - AWS SDK v2):
+
+```java
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+
+import java.net.URL;
+import java.nio.file.Paths;
+import java.time.Duration;
+
+public class S3Example {
+
+    private final S3Client s3Client = S3Client.create();
+
+    public void uploadFile() {
+        PutObjectRequest request = PutObjectRequest.builder()
+            .bucket("my-bucket")
+            .key("uploads/file.txt")
+            .build();
+
+        s3Client.putObject(request, Paths.get("localfile.txt"));
+    }
+
+    public String generatePresignedUrl() {
+        S3Presigner presigner = S3Presigner.create();
+
+        PresignedGetObjectRequest presignedRequest =
+            presigner.presignGetObject(builder -> builder
+                .signatureDuration(Duration.ofMinutes(60))
+                .getObjectRequest(GetObjectRequest.builder()
+                    .bucket("my-bucket")
+                    .key("uploads/file.txt")
+                    .build()));
+
+        return presignedRequest.url().toString();
+    }
+}

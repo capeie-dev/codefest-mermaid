@@ -1,0 +1,53 @@
+The Logging & Masking library provides structured logging and sensitive data protection through a combination of custom Logback converters, masking utilities, and centralized configuration. It is primarily used in Spring Boot applications to enhance observability while enforcing security and compliance around logged data. [1, 2]
+
+Key Features: [1, 2, 3]
+
+• JSON Serialization: Converts log arguments (Java objects) into structured JSON using Jackson ObjectMapper.  
+• Error Code Extraction: Custom logback converter extracts error codes from exceptions for structured error monitoring.  
+• Sensitive Data Masking: Masks headers and fields like authorization tokens using a configurable masking strategy.  
+• Null-Safe Masking: Prevents unnecessary masking of `null` values through an optional property flag.  
+• Pluggable Masking Logic: Uses `FieldMasker` interface to plug in custom masking logic.  
+• Logback Pattern Integration: Works seamlessly with Logback logging framework and Spring Boot's logging configuration.  
+• Minimal Overhead: Lightweight integration with support for async logging via Logstash Logback encoder.
+
+Use Cases: [2, 3]
+
+• Production Debugging: Adds structured fields (error code, user ID, trace ID) to logs for easy parsing in ELK/Splunk.  
+• Security & Compliance: Obfuscates sensitive fields such as passwords, tokens, SSNs, and auth headers in log output.  
+• Microservices Observability: Supports centralized logging standards across multiple microservices.  
+• Custom Exceptions & Error Codes: Automatically attaches custom `errorCode` fields from domain-level exceptions.
+
+How It Works: [1, 3]
+
+• `DataFieldConverter` converts objects passed to logs into JSON format using Jackson.  
+• `ErrorCodeConverter` inspects the throwable and log arguments to extract meaningful error codes.  
+• Logs are decorated via Logstash's `MaskingJsonGeneratorDecorator`, enhanced with custom `FieldMasker`.  
+• Field masking behavior is controlled via the property:  
+  `logback.mask.disable.null-masking=true` → disables masking for `null` values.  
+• Default logging level is set to `INFO` but can be overridden using Spring Boot's `application.yml`.  
+• Masking targets include header values like `Authorization`, which are specified via predefined key paths.
+
+Underlying Methods (Java – Logback + Masking Utility):
+
+• `DataFieldConverter.convert()`: Converts log arguments (typically objects) to JSON using Jackson.  
+• `ErrorCodeConverter.convert()`: Looks for `BaseException` subclasses or error objects and extracts an error code.  
+• `Throwable.getCause()` / `instanceof`: Used to inspect nested exceptions for specific types.  
+• `FieldMasker.mask(Object value, String fieldName)`: Applies masking rules to values based on field name.  
+• `MaskingJsonGeneratorDecorator`: Logstash component that wraps JSON generation with masking logic.  
+• `application.properties` or `application.yml` config options:
+  - `logback.mask.disable.null-masking=true`: Disables null field masking.  
+  - `logging.level.root=INFO`: Default log level.  
+
+Supported Exception Types:
+
+• Custom Exceptions extending `BaseException`:  
+  - `AuthenticationException`  
+  - `BadRequestException`  
+  - `DataNotFoundException`  
+  - `EAPIUnavailableException`  
+  - `ForbiddenException`  
+  - `IntegrationException`  
+  - `InvalidInputException`  
+  - `SystemException`  
+  - `UnprocessableEntityException`  
+  - `VersionConflictException`  

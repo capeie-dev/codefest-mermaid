@@ -1,0 +1,39 @@
+The FileProcessors library is designed to handle full-cycle parsing and transformation of structured text-based file formats such as `.csv` and `.dat`. It supports both fixed-width and non-fixed-width (delimited) files, making it ideal for batch file ingestion in legacy and enterprise systems. The library converts these files to plain Java objects (POJOs) and vice versa. [1, 2]
+
+Key Features: [2, 3]
+
+• Fixed-Width File Support: Uses JRecordBind to parse and serialize files where columns have predetermined widths. [2]  
+• Delimited (Non-Fixed) File Support: Uses OpenCSV to handle standard CSV or delimited formats where column widths are variable. [3]  
+• Schema-Based Mapping: Maps file lines to annotated POJOs using metadata for format, order, and length.  
+• Bidirectional Transformation: Supports both reading (file → object) and writing (object → file).  
+• Header/Footer Handling: Optional header/footer logic can be configured during processing.  
+• Pluggable Parsers: Central NonFixedWidthParser component enables switching between formats.  
+• Data Validation & Transformation: Easily extendable to include field-level validations or transformations before persistence.  
+
+Common Use Cases: [1, 2, 3]
+
+• Batch File Uploads: Ingest customer records, financial transactions, or user data from `.csv` or `.dat` files.  
+• Mainframe Integration: Read fixed-width files exported from legacy COBOL systems or ETL platforms.  
+• File Exports: Generate reports or exports with a consistent structure for downstream systems.  
+• Migrations & Conversions: Convert bulk text files into structured domain models during data migrations.  
+• Regulatory File Compliance: Parse or emit structured line-based formats for governmental or tax reporting.  
+
+How It Works: [2, 3]
+
+• Annotated POJOs define the schema — fields are mapped using `@Field`, `@Length`, or OpenCSV annotations.  
+• A format-specific parser (JRecordBind for fixed, OpenCSV for delimited) reads or writes lines.  
+• Each line is parsed into a Java object (or serialized back into a line string).  
+• Optionally, pre- and post-processing (e.g., trimming, validation) occurs.  
+• Results are passed to a downstream service (e.g., database, API, etc.).
+
+Underlying Methods (Java – JRecordBind / OpenCSV Based):
+
+• `FixedWidthReader.read(InputStream, Class<T>)`: Reads a fixed-width file and returns a list of POJOs.  
+• `FixedWidthWriter.write(OutputStream, List<T>)`: Serializes POJOs back into fixed-width line format.  
+• `CsvToBeanBuilder<T>().withType(Class<T>)`: Reads non-fixed-width (CSV) data into objects using OpenCSV.  
+• `StatefulBeanToCsvBuilder<T>().build().write(List<T>)`: Writes a list of objects into a CSV using OpenCSV.  
+• `@FixedLengthField / @Field(name = "colName", length = 10)`: Used to annotate POJO fields for fixed-width mapping.  
+• `@CsvBindByName / @CsvBindByPosition`: Used to annotate POJO fields for CSV mapping.  
+• `NonFixedWidthParser.read(File)`: Abstracts OpenCSV reader logic and maps rows to POJOs.  
+• `NonFixedWidthParser.write(List<T>, File)`: Converts a list of objects into CSV-formatted text for export.  
+• `PreProcessor / PostProcessor interfaces`: Optional hooks for row-level or file-level processing logic.

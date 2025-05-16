@@ -1,0 +1,40 @@
+Spring Boot Actuator is a subproject of Spring Boot that provides production-ready features such as health checks, metrics, info endpoints, environment details, and application monitoring tools. It enables developers and operators to monitor and manage applications easily during development and in production environments. [1, 2, 3]
+
+Key Features: [1, 2, 4, 5]
+
+• Health Checks: Provides a `/actuator/health` endpoint that reports the application’s health and integrates with cloud-native health monitoring tools. [2, 3, 4]  
+• Metrics: Exposes application, system, and custom metrics via `/actuator/metrics`, integrating with Prometheus, Micrometer, and Grafana. [2, 4, 6]  
+• Environment and Configuration Info: Displays application properties, environment variables, and bean details at `/actuator/env` and `/actuator/beans`. [2, 4]  
+• Logging Configuration: Supports viewing and modifying log levels at runtime via `/actuator/loggers`. [3, 4]  
+• Thread Dump and Heap Dump: Offers insight into application threads and memory usage. [2, 4, 7]  
+• Custom Endpoints: Allows developers to create their own actuator endpoints for domain-specific monitoring. [3, 6]  
+• Security Integration: Actuator endpoints can be secured via Spring Security with role-based access control. [2, 5]  
+• Cloud and Container Support: Integrates with Kubernetes liveness/readiness probes, AWS CloudWatch, and other platforms. [2, 8]  
+
+Use Cases: [2, 4, 5, 6]
+
+• Production Monitoring: Observe CPU usage, thread pools, HTTP request metrics, DB connection pool state, and custom health indicators. [2, 4, 5]  
+• CI/CD Validation: Use health endpoints in deployment pipelines to verify application readiness. [6, 7]  
+• Debugging and Troubleshooting: Inspect environment variables, thread states, and log levels on-the-fly. [2, 4, 7]  
+• Alerting Integration: Send metrics to Prometheus/Grafana or custom alerting systems for real-time observability. [2, 6]  
+• API Monitoring: Track endpoint hit counts, error rates, and latency metrics via Micrometer. [4, 6]  
+
+Example Actuator Endpoints:
+
+• `/actuator/health` – Application health status  
+• `/actuator/metrics` – Available metrics  
+• `/actuator/loggers` – Log levels  
+• `/actuator/env` – Environment properties  
+• `/actuator/httptrace` – Recent HTTP requests (if enabled)  
+
+Configuration Snippet (application.yml):
+
+```yaml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, info, loggers, env
+  endpoint:
+    health:
+      show-details: always

@@ -1,0 +1,34 @@
+RestClient is a lightweight, HTTP-based client library used for interacting with RESTful APIs in Java applications. It simplifies the process of sending HTTP requests and receiving responses by abstracting lower-level networking logic. RestClient is commonly used in Spring Boot, Jakarta EE, and other Java-based frameworks. [1, 2, 3]
+
+Key Features and Benefits: [2, 3, 4, 5]
+
+• HTTP Request Support: Enables sending HTTP methods such as GET, POST, PUT, PATCH, and DELETE to interact with REST APIs. [3, 5]  
+• Response Deserialization: Supports automatic conversion of HTTP responses into Java objects using Jackson, Gson, or other mappers. [2, 5]  
+• Custom Headers and Authentication: Allows adding headers (e.g., Authorization, Content-Type) for secure and flexible API communication. [3, 6, 7]  
+• Exception Handling: Provides mechanisms to handle HTTP error responses gracefully. [3, 5]  
+• Connection Management: Includes connection timeouts, retry policies, and connection pooling. [4, 8]  
+• Integration Friendly: Can be used directly or wrapped inside service layers, supporting clean code architecture. [4, 9]  
+• Logging and Debugging: Often integrates with logging frameworks for tracking request/response details. [5, 10]  
+
+Common Use Cases: [3, 4, 6, 8]
+
+• API Consumption: Used to call external REST services such as payment gateways, third-party services, or microservices within the same system. [2, 4, 11]  
+• Internal Microservice Communication: Allows synchronous REST calls between internal services in microservice-based architectures. [4, 8, 12]  
+• System Integration: Integrates with third-party systems for data ingestion, validation, or workflow automation. [4, 6]  
+• Custom Wrappers: Often wrapped in utility or service classes to create domain-specific API clients. [4, 5, 13]  
+
+How it Works: [3, 4, 5, 6]
+
+• Developers define a base URL and use method calls to configure and send requests.  
+• Request payloads are serialized into JSON/XML, and responses are parsed into Java objects.  
+• Developers may configure timeouts, retry logic, or custom request interceptors.  
+• Integrates with HTTP clients like Apache HttpClient, OkHttp, or Java 11’s built-in `HttpClient`. [5, 6, 10]
+
+Example Usage (Java):
+
+```java
+RestClient client = new RestClient("https://api.example.com");
+Response response = client.post("/users", new User("john", "doe"));
+if (response.getStatus() == 201) {
+    System.out.println("User created: " + response.getBody(User.class));
+}
