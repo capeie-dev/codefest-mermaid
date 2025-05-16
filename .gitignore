@@ -38,9 +38,9 @@ yarn-error.log*
 *.temp
 
 # Vector database files
-# /hnswlib_index/
-# /vector_db/
-# /embeddings/
+/hnswlib_index/
+/vector_db/
+/embeddings/
 
 # Cache directories
 .cache/

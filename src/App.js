@@ -1,5 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import mermaid from 'mermaid';
+
+// Initialize mermaid with default configuration
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'dark',
+  securityLevel: 'loose',
+  fontFamily: 'Segoe UI, sans-serif'
+});
+
+// Component to render Mermaid diagrams
+const MermaidDiagram = ({ chart }) => {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (ref.current && chart) {
+      ref.current.innerHTML = '';
+      mermaid.render(`mermaid-${Date.now()}`, chart).then(({ svg }) => {
+        ref.current.innerHTML = svg;
+      });
+    }
+  }, [chart]);
+
+  return <div className="mermaid-diagram" ref={ref} style={{ width: '100%', marginTop: '20px' }} />;
+};
 
 function App() {
   // Get theme from localStorage or default to dark
@@ -7,6 +32,9 @@ function App() {
     const savedTheme = localStorage.getItem('codecrusaders-theme');
     return savedTheme || 'dark';
   });
+  
+  // Store the mermaid diagram code
+  const [mermaidCode, setMermaidCode] = useState('');
   
   // Apply theme directly and immediately when component mounts
   useEffect(() => {
@@ -48,6 +76,7 @@ function App() {
     setLoading(true);
     setSummary('');
     setImageBase64('');
+    setMermaidCode('');
     setError('');
     try {
       const response = await axios.post('http://localhost:3000/generate-architecture', {
@@ -58,6 +87,8 @@ function App() {
       } else {
         setSummary(response.data.summary);
         setImageBase64(response.data.image_base64);
+        // Store the mermaid code for rendering
+        setMermaidCode(response.data.mermaid);
       }
     } catch (err) {
       setError(err.response?.data?.error || err.message || 'Unknown error');
@@ -163,7 +194,7 @@ function App() {
             <p style={{color: theme === 'dark' ? '#d1d2d6' : '#333333'}}>{summary}</p>
           </div>
         )}
-        {imageBase64 && (
+        {mermaidCode && (
           <div style={{
             backgroundColor: theme === 'dark' ? '#23272f' : '#ffffff',
             border: `1px solid ${theme === 'dark' ? '#33384d' : '#e1e1e6'}`,
@@ -175,16 +206,23 @@ function App() {
             textAlign: 'center'
           }}>
             <h3 style={{color: 'var(--text-color)'}}>Architecture Diagram</h3>
-            <img
-              src={`data:image/png;base64,${imageBase64}`}
-              alt="Architecture Diagram"
-              style={{
-                border: `1px solid ${theme === 'dark' ? '#33384d' : '#e1e1e6'}`,
-                borderRadius: '6px',
-                backgroundColor: theme === 'dark' ? '#181a20' : '#ffffff',
-                maxWidth: '100%'
-              }}
-            />
+            
+            {/* Render the Mermaid diagram using our component */}
+            <MermaidDiagram chart={mermaidCode} />
+            
+            {/* Display the raw Mermaid code for reference */}
+            <details style={{marginTop: '20px', textAlign: 'left'}}>
+              <summary style={{color: 'var(--text-color)', cursor: 'pointer'}}>View Diagram Code</summary>
+              <pre style={{
+                backgroundColor: theme === 'dark' ? '#1a1e24' : '#f5f5f5',
+                padding: '10px',
+                borderRadius: '4px',
+                overflowX: 'auto',
+                color: theme === 'dark' ? '#e1e1e6' : '#333'
+              }}>
+                {mermaidCode}
+              </pre>
+            </details>
           </div>
         )}
       </div>
